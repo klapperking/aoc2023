@@ -40,7 +40,7 @@ public class Part01Solution {
     return gameId;
   }
 
-  private static HashMap<String, HashMap<String, HashMap<String, Integer>>> parseLine(String lineContent) {
+  public static HashMap<String, HashMap<String, HashMap<String, Integer>>> parseLine(String lineContent) {
 
     HashMap<String, HashMap<String, HashMap<String, Integer>>> gameInfo = new HashMap<String, HashMap<String, HashMap<String, Integer>>>();
 

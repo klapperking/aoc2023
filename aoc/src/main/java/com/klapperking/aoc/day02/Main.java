@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import com.klapperking.aoc.day02.solution.part01.Part01Solution;
+import com.klapperking.aoc.day02.solution.part02.Part02Solution;
 
 public class Main {
   public static void main(String[] args) {
@@ -41,7 +42,9 @@ public class Main {
 
         result += gameId;
       } else {
+        int power = Part02Solution.powerOfMinimumCubesToGame(line);
 
+        result += power;
       }
     }
 
