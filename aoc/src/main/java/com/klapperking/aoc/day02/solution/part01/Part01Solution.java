@@ -73,4 +73,8 @@ public class Part01Solution {
     gameInfo.put(gameId, drawInfo);
     return gameInfo;
   }
+
+  public static int sumOfPartNumbers(String input) {
+    return 0;
+  }
 }
