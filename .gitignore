@@ -1,2 +1,3 @@
 /aoc/target/
 .vscode/
+aoc/src/main/resources/*
