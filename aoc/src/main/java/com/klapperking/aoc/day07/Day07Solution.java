@@ -7,9 +7,11 @@ public class Day07Solution {
 
   public static void main(String[] args) {
 
+    boolean part1 = true;
+
     // read file
     InputStream inputStream = Day07Solution.class.getResourceAsStream("/day07/input.txt");
-    Day07Parser fileParser = new Day07Parser(inputStream);
+    Day07Parser fileParser = new Day07Parser(inputStream, part1);
     List<Hand> hands = fileParser.getHands();
 
     // rank hands based on first card value
@@ -25,5 +27,3 @@ public class Day07Solution {
     System.out.println("Part 1: " + totalWinnings);
   }
 }
-
-// not right: 241202592

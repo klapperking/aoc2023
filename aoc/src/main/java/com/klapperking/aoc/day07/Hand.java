@@ -4,15 +4,20 @@ import java.util.*;
 
 public class Hand {
 
-  private int type;
+  private int type = 0;
   private int bid;
+  private int jValue = 11;
 
   private List<Integer> cards;
 
-  public Hand(String[] cardStrings, Integer bid) {
+  public Hand(String[] cardStrings, Integer bid, boolean part1) {
 
     this.bid = bid;
     this.cards = new ArrayList<>();
+
+    if (!part1) {
+      jValue = 1;
+    }
 
     for (String card : cardStrings) {
 
@@ -26,7 +31,7 @@ public class Hand {
           this.cards.add(10);
           break;
         case "J":
-          this.cards.add(11);
+          this.cards.add(this.jValue);
           break;
         case "Q":
           this.cards.add(12);
@@ -39,7 +44,7 @@ public class Hand {
           break;
       }
     }
-    calcType();
+    calcType(this.cards);
   }
 
   public Integer getType() {
@@ -51,11 +56,29 @@ public class Hand {
   }
 
 
-  private void calcType() {
+  private void calcType(List<Integer> cards) {
+
+    if (this.jValue == 1) {
+
+      if (Collections.frequency(cards, this.jValue) > 0) {
+
+        int jIndex = cards.indexOf(this.jValue);
+        for (int jVal = 2; jVal < 15; jVal++) {
+
+          if (jVal == this.jValue) continue;
+
+          cards.set(jIndex, jVal);
+
+          calcType(cards);
+        }
+        cards.set(jIndex, this.jValue);
+      }
+
+    }
 
     HashMap<Integer, Integer> counts = new HashMap<>();
 
-    for (int card : this.cards) {
+    for (int card : cards) {
 
       if (counts.get(card) == null) {
         counts.put(card, 1);
@@ -65,36 +88,39 @@ public class Hand {
       counts.put(card, counts.get(card) + 1);
     }
 
+    int type = 0;
     switch (counts.size()) {
       // high card
       case 5:
-        this.type = 0;
+        type = 0;
         break;
       // pair
       case 4:
-        this.type = 1;
+        type = 1;
         break;
       // three-pair or 2 two-pairs
       case 3:
         if (counts.values().contains(3)) {
-          this.type = 3;
+          type = 3;
         } else {
-          this.type = 2;
+          type = 2;
         }
         break;
       // four-pair or fullhouse
       case 2:
         if (counts.values().contains(3)) {
-          this.type = 4;
+          type = 4;
         } else {
-          this.type = 5;
+          type = 5;
         }
         break;
       // five-pair
       case 1:
-        this.type = 6;
+        type = 6;
         break;
     }
+
+    this.type = Math.max(type, this.type);
   }
 
   private static int compareCardLists(List<Integer> cards1, List<Integer> cards2) {

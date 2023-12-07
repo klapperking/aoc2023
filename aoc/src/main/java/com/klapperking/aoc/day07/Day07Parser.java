@@ -5,9 +5,11 @@ import java.io.*;
 
 public class Day07Parser {
 
+  private boolean part1;
   private List<Hand> hands = new ArrayList<>();
 
-  public Day07Parser(InputStream inputStream) {
+  public Day07Parser(InputStream inputStream, boolean part1) {
+    this.part1 = part1;
     parseFile(inputStream);
   }
 
@@ -22,7 +24,7 @@ public class Day07Parser {
         String[] handInfo = line.split(" ");
 
         int bid = Integer.parseInt(handInfo[1]);
-        Hand hand = new Hand(handInfo[0].split(""), bid);
+        Hand hand = new Hand(handInfo[0].split(""), bid, this.part1);
 
         hands.add(hand);
       }
