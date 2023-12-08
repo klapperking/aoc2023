@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-public class Part1Parser implements Parser {
+public class Day08Parser {
 
   private InputStream inputStream;
 
@@ -13,7 +13,7 @@ public class Part1Parser implements Parser {
 
   private Graph graph;
 
-  public Part1Parser(InputStream inputStream) {
+  public Day08Parser(InputStream inputStream) {
     this.inputStream = inputStream;
     this.graph = new Graph();
   }
@@ -26,7 +26,6 @@ public class Part1Parser implements Parser {
     return graph;
   }
 
-  @Override
   public void parseFile() {
 
     try (BufferedReader br = new BufferedReader(new InputStreamReader(this.inputStream))) {

@@ -10,7 +10,7 @@ public class Day08Solution {
 
     // read the file
     InputStream inputStream = Day08Solution.class.getResourceAsStream("/day08/input.txt");
-    Parser parser = Day08ParserFactory.create(inputStream, part1);
+    Day08Parser parser = new Day08Parser(inputStream);
     parser.parseFile();
 
     // given a graph, follow the edges based on LR instructions
