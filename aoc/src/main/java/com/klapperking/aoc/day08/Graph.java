@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import java.util.concurrent.*;
+
 public class Graph {
 
   public Map<Node, List<Node>> adjacencyList;
@@ -45,7 +47,47 @@ public class Graph {
     return null;
   }
 
+  public Node followEdge(Node node, String direction) throws IllegalArgumentException {
+    Node nextNode;
 
+    if (direction.equals("L")) {
+      nextNode = this.adjacencyList.get(node).get(0);
+    } else if (direction.equals("R")) {
+      nextNode = this.adjacencyList.get(node).get(1);
+    } else {
+      throw new IllegalArgumentException("Direction has to be 'L' or 'R' ");
+    }
+    return nextNode;
+  }
 
+  public List<Node> followEdgeForMultipleNodes(List<Node> startNodes, String direction) {
 
+    List<Node> resultNodeList = new ArrayList<>();
+
+    int numThreads = Runtime.getRuntime().availableProcessors();
+    ExecutorService executerService = Executors.newFixedThreadPool(numThreads);
+
+    List<Callable<Node>> tasks = new ArrayList<>();
+
+    for (int i = 0; i < startNodes.size(); i++) {
+      final int index = i;
+
+      tasks.add(() -> {
+        return followEdge(startNodes.get(index), direction);
+      });
+    }
+
+    try {
+
+      List<Future<Node>> futures = executerService.invokeAll(tasks);
+      for (Future<Node> future : futures) {
+        resultNodeList.add(future.get());
+      }
+    } catch (InterruptedException | ExecutionException e) {
+      e.printStackTrace();
+    } finally {
+      executerService.shutdown();
+    }
+    return resultNodeList;
+  }
 }

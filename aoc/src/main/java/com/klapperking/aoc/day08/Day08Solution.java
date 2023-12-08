@@ -1,12 +1,13 @@
 package com.klapperking.aoc.day08;
 
 import java.io.*;
+import java.math.BigInteger;
 
 public class Day08Solution {
 
   public static void main(String[] args) {
 
-    boolean part1 = true;
+    boolean part1 = false;
 
     // read the file
     InputStream inputStream = Day08Solution.class.getResourceAsStream("/day08/input.txt");
@@ -17,29 +18,13 @@ public class Day08Solution {
     Graph graph = parser.getGraph();
     String[] moves = parser.getMoveInstructions();
 
-    int stepCounter = 0;
-    Node exitNode = graph.getNodeByValue("AAA");
-    boolean stopFlag = true;
-
-    while (stopFlag) {
-
-      for (String move : moves) {
-
-        if (move.equals("L")) {
-          exitNode = graph.adjacencyList.get(exitNode).get(0);
-        } else {
-          exitNode = graph.adjacencyList.get(exitNode).get(1);
-        }
-        stepCounter++;
-
-        if (exitNode.value.equals("ZZZ")) {
-          stopFlag = false;
-          break;
-        }
-
-      }
+    if (part1) {
+      int stepCounter = Part01Solution.solution(graph, moves);
+      System.out.println("Part 1: " + stepCounter);
+    } else {
+      BigInteger stepCounter = Part02Solution.solution(graph, moves);
+      System.out.println("Part 2: " + stepCounter);
     }
 
-    System.out.println("Part 1: " + stepCounter);
   }
 }
