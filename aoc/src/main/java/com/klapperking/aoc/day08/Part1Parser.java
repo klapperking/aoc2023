@@ -11,11 +11,19 @@ public class Part1Parser implements Parser {
 
   private String[] moveInstructions;
 
-  private Tree tree;
+  private Graph graph;
 
   public Part1Parser(InputStream inputStream) {
-
     this.inputStream = inputStream;
+    this.graph = new Graph();
+  }
+
+  public String[] getMoveInstructions() {
+      return moveInstructions;
+    }
+
+  public Graph getGraph() {
+    return graph;
   }
 
   @Override
@@ -40,23 +48,38 @@ public class Part1Parser implements Parser {
         String[] lineSplit = line.split("=");
         Node currentNode = new Node(lineSplit[0].trim());
 
-        // attach children to node
+        // if node doesnt exist, create, else use the existin from here one
+        if (graph.getNodeByValue(currentNode.value) == null) {
+          graph.addNode(currentNode);
+        } else {
+          currentNode = graph.getNodeByValue(currentNode.value);
+        }
+
         String[] leftRightSplit = lineSplit[1].trim().split(",");
         Node left = new Node(leftRightSplit[0].replace("(", "").trim());
         Node right = new Node(leftRightSplit[1].replace(")", "").trim());
-        currentNode.addChildren(left, right);
 
-        // add this node to tree
+        if (graph.getNodeByValue(left.value) == null) {
+          graph.addNode(left);
+        } else {
+          left = graph.getNodeByValue(left.value);
+        }
 
+        if (graph.getNodeByValue(right.value) == null) {
+          graph.addNode(right);
+        } else {
+          right = graph.getNodeByValue(right.value);
+        }
 
+        // add the required edges
+        graph.addEdge(currentNode, left);
+        graph.addEdge(currentNode, right);
 
         lineNumber++;
       }
+
     } catch (IOException e) {
       e.printStackTrace();
     }
-
   }
-
-
 }

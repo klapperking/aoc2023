@@ -1,6 +1,5 @@
 package com.klapperking.aoc.day08;
 
-import java.util.*;
 import java.io.*;
 
 public class Day08Solution {
@@ -10,13 +9,37 @@ public class Day08Solution {
     boolean part1 = true;
 
     // read the file
-    InputStream inputStream = Day08Solution.class.getResourceAsStream("/day08/input2.txt");
+    InputStream inputStream = Day08Solution.class.getResourceAsStream("/day08/input.txt");
     Parser parser = Day08ParserFactory.create(inputStream, part1);
     parser.parseFile();
 
-    // perform the task
+    // given a graph, follow the edges based on LR instructions
+    Graph graph = parser.getGraph();
+    String[] moves = parser.getMoveInstructions();
 
+    int stepCounter = 0;
+    Node exitNode = graph.getNodeByValue("AAA");
+    boolean stopFlag = true;
 
+    while (stopFlag) {
 
+      for (String move : moves) {
+
+        if (move.equals("L")) {
+          exitNode = graph.adjacencyList.get(exitNode).get(0);
+        } else {
+          exitNode = graph.adjacencyList.get(exitNode).get(1);
+        }
+        stepCounter++;
+
+        if (exitNode.value.equals("ZZZ")) {
+          stopFlag = false;
+          break;
+        }
+
+      }
+    }
+
+    System.out.println("Part 1: " + stepCounter);
   }
 }
