@@ -7,11 +7,11 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Arrays;
-import java.util.Collections;
 
 public class Day10Parser {
 
   public List<List<String>> grid = new ArrayList<>();
+  public List<List<Node>> nodeGrid = new ArrayList<>();
   public List<Integer> startPos = new ArrayList<>();
 
   public Day10Parser(InputStream inputStream) {
@@ -27,34 +27,24 @@ public class Day10Parser {
 
       while ((line = br.readLine()) != null) {
 
-        List<String> lineStrings = new ArrayList<>(Arrays.asList(line.split("")));
+        List<String> pipes = new ArrayList<>(Arrays.asList(line.split("")));
+        List<Node> pipeNodes = new ArrayList<>();
 
-        // pad top row
-        /*
-        if (lineNumber == 0) {
-          this.grid.add(Collections.nCopies(lineStrings.size(), "X"));
-        }
-        */
+        for (int i = 0; i < pipes.size(); i++) {
 
-        // pad left with X
-        //lineStrings.add(0, "X");
+          Node pipeNode = new Node(lineNumber, i, pipes.get(i));
 
-        // add line
-        this.grid.add(lineStrings);
+          if (pipes.get(i).equals("S")) {
+            this.startPos.add(lineNumber);
+            this.startPos.add(i);
+          }
 
-        // pad right with X
-        //lineStrings.add(lineStrings.size() - 1, "X");
-
-        if (lineStrings.contains("S")) {
-          this.startPos.add(lineNumber);
-          this.startPos.add(lineStrings.indexOf("S"));
+          pipeNodes.add(pipeNode);
         }
 
+        this.nodeGrid.add(pipeNodes);
         lineNumber++;
       }
-
-      // pad bottom with X
-      //this.grid.add(Collections.nCopies(this.grid.get(0).size(), "X"));
 
     } catch (IOException e) {
       e.printStackTrace();
