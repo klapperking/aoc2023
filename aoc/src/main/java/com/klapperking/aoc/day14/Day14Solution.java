@@ -12,7 +12,7 @@ public class Day14Solution {
 
   public static void main(String[] args) {
 
-    InputStream inputStream = Day14Solution.class.getResourceAsStream("/day14/input.txt");
+    InputStream inputStream = Day14Solution.class.getResourceAsStream("/day14/input2.txt");
     Day14Parser parser = new Day14Parser(inputStream);
     List<List<String>> grid = parser.grid;
 
@@ -22,9 +22,26 @@ public class Day14Solution {
 
         grid = rollRocksUp(grid);
       } else {
-        // part2 call here NWSE; 1 billion cycles ; 4 billion calls of rollsBackUp (shortcut?)
-        // dynamic programming?
-        // early exit if arriving in a known position? That probably works.
+        HashMap<List<List<String>>, Long> seenGrids = new HashMap<>();
+
+        for (long i = 0; i < 3; i++) {
+
+          // System.out.println(i);
+          System.out.println("");
+
+          // if we know that grid already, no more cycles will happen
+          if (seenGrids.containsKey(grid)) {
+            break;
+          }
+
+          // if not add this grid into our grid lookup
+          seenGrids.put(grid, i);
+          grid = nwseCycle(grid);
+
+          for (List<String> row : grid) {
+            System.out.println(String.join("", row));
+          }
+        }
       }
     }
 
@@ -37,6 +54,62 @@ public class Day14Solution {
 
     System.out.println(result);
   }
+
+
+
+
+  private static List<List<String>> nwseCycle(List<List<String>> grid) {
+
+    // roll north
+    grid = rollRocksUp(grid);
+
+    // rotate and roll three time (west, south, east)
+    for (int i = 0; i < 3; i++) {
+      grid = rotateRight(grid);
+      grid = rollRocksUp(grid);
+      System.out.println(i);
+    }
+
+    // rotate back to north
+    grid = rotateLeft(grid);
+
+    return grid;
+  }
+
+
+
+  private static List<List<String>> rotateRight(List<List<String>> grid) {
+
+    int rows = grid.size();
+    int cols = grid.get(0).size();
+
+    // transpose grid
+    List<List<String>> transposedGrid = new ArrayList<>();
+    for (int j = 0; j < cols; j++) {
+
+      List<String> column  = new ArrayList<>();
+
+      for (int i= 0; i < rows; i++) {
+
+        column.add(String.valueOf(grid.get(i).get(j)));
+      }
+      transposedGrid.add(column);
+    }
+
+    // reverse rows
+    for (int i = 0; i < cols / 2; i++) {
+      for (int j = 0; j < rows; j++) {
+
+        String track = transposedGrid.get(i).get(j);
+        transposedGrid.get(i).set(j, transposedGrid.get(cols - 1 - i).get(j));
+        transposedGrid.get(cols - 1 -i).set(j, track);
+      }
+    }
+
+    return transposedGrid;
+  }
+
+
 
   private static List<List<String>> rollRocksUp(List<List<String>> grid) {
 
