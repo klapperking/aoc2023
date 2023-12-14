@@ -10,9 +10,11 @@ public class Day14Solution {
 
   public static List<Boolean> part1 = new ArrayList<>(Arrays.asList(true, false));
 
+  public static HashMap<List<String>, Long> SEENGRIDS = new HashMap<>();
+
   public static void main(String[] args) {
 
-    InputStream inputStream = Day14Solution.class.getResourceAsStream("/day14/input2.txt");
+    InputStream inputStream = Day14Solution.class.getResourceAsStream("/day14/input.txt");
     Day14Parser parser = new Day14Parser(inputStream);
     List<List<String>> grid = parser.grid;
 
@@ -22,37 +24,31 @@ public class Day14Solution {
 
         grid = rollRocksUp(grid);
       } else {
-        HashMap<List<List<String>>, Long> seenGrids = new HashMap<>();
 
-        for (long i = 0; i < 3; i++) {
-
-          // System.out.println(i);
-          System.out.println("");
-
-          // if we know that grid already, no more cycles will happen
-          if (seenGrids.containsKey(grid)) {
-            break;
-          }
-
-          // if not add this grid into our grid lookup
-          seenGrids.put(grid, i);
+        for (long i = 0; i < 1_000_000_000; i++) {
           grid = nwseCycle(grid);
 
+          List<String> uniqueKey = new ArrayList<>();
           for (List<String> row : grid) {
-            System.out.println(String.join("", row));
+            uniqueKey.add(String.join("", row));
           }
+
+          if (SEENGRIDS.containsKey(uniqueKey)) {
+            long cycle_length = i - SEENGRIDS.get(uniqueKey);
+            i += ((1_000_000_000 - i) / cycle_length) * cycle_length;
+          }
+
+          SEENGRIDS.put(uniqueKey, i);
         }
       }
+      long result = 0;
+
+      for (int i = 0; i < grid.size(); i++) {
+        result += String.join("", grid.get(i)).chars().filter(ch -> ch == 'O').count() * (grid.size() - i);
+      }
+
+      System.out.println(result);
     }
-
-    long result = 0;
-
-    for (int i = 0; i < grid.size(); i++) {
-
-      result += String.join("", grid.get(i)).chars().filter(ch -> ch == 'O').count() * (grid.size() - i);
-    }
-
-    System.out.println(result);
   }
 
 
@@ -67,11 +63,10 @@ public class Day14Solution {
     for (int i = 0; i < 3; i++) {
       grid = rotateRight(grid);
       grid = rollRocksUp(grid);
-      System.out.println(i);
     }
 
     // rotate back to north
-    grid = rotateLeft(grid);
+    grid = rotateRight(grid);
 
     return grid;
   }
@@ -96,13 +91,13 @@ public class Day14Solution {
       transposedGrid.add(column);
     }
 
-    // reverse rows
-    for (int i = 0; i < cols / 2; i++) {
-      for (int j = 0; j < rows; j++) {
+    // reverse columns
+    for (int i = 0; i < rows; i++) {
+      for (int j = 0; j < cols / 2; j++) {
 
         String track = transposedGrid.get(i).get(j);
-        transposedGrid.get(i).set(j, transposedGrid.get(cols - 1 - i).get(j));
-        transposedGrid.get(cols - 1 -i).set(j, track);
+        transposedGrid.get(i).set(j, transposedGrid.get(i).get(cols - 1 - j));
+        transposedGrid.get(i).set(cols - 1 - j, track);
       }
     }
 
