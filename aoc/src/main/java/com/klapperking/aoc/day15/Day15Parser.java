@@ -1,4 +1,4 @@
-package com.klapperking.aoc;
+package com.klapperking.aoc.day15;
 
 import java.io.BufferedReader;
 import java.io.IOException;

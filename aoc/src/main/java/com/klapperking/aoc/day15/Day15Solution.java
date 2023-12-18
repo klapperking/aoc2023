@@ -4,8 +4,6 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
-import com.klapperking.aoc.Day15Parser;
-
 public class Day15Solution {
 
   public static void main(String[] args) {
