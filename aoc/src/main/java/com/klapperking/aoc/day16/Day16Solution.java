@@ -11,17 +11,61 @@ public class Day16Solution {
 
   public static void main(String[] args) {
 
-    // boolean part1 = false;
+    Boolean[] part1 = {true, false};
 
     InputStream inputStream = Day16Solution.class.getResourceAsStream("/day16/input.txt");
     Day16Parser parser = new Day16Parser(inputStream);
     List<String[]> grid = parser.grid;
+    Integer[] initialStart = {0, 0, 0};
+
+    int result = 0;
+
+    for (boolean part : part1) {
+
+      if (part) {
+        result = energizeGrid(grid, initialStart);
+      } else {
+
+        // for each row:
+        for (int i = 0; i < grid.size(); i++) {
+
+          // from the left
+          initialStart[0] = i;
+          initialStart[1] = 0;
+          initialStart[2] = 0;
+          result = Math.max(result, energizeGrid(grid, initialStart));
+
+          // from the right
+          initialStart[1] = grid.get(0).length - 1;
+          initialStart[2] = 1;
+          result = Math.max(result, energizeGrid(grid, initialStart));
+        }
+
+        for (int i = 0; i < grid.get(0).length; i++) {
+
+          // from the top
+          initialStart[0] = 0;
+          initialStart[1] = i;
+          initialStart[2] = 3;
+          result = Math.max(result, energizeGrid(grid, initialStart));
+
+          // from the bootom
+          initialStart[0] = grid.get(0).length - 1;
+          initialStart[2] = 2;
+          result = Math.max(result, energizeGrid(grid, initialStart));
+        }
+      }
+
+      System.out.println(result);
+    }
+  }
+
+  private static int energizeGrid(List<String[]> grid, Integer[] startPos) {
 
     // keep track of x, y, d combo; If seen ignore;
     HashMap<List<Integer>, List<Integer>> seen = new HashMap<>();
     List<Integer[]> toVisit = new ArrayList<>();
-    Integer[] start = {0, 0, 0};
-    toVisit.add(start);
+    toVisit.add(startPos);
 
     // move right (left), left (right), up (below), down (above)
     Integer[] directionX = {0, 0, -1, 1};
@@ -135,18 +179,6 @@ public class Day16Solution {
       }
     }
 
-    for (HashMap.Entry<List<Integer>, List<Integer>> entry : seen.entrySet()) {
-
-      List<Integer> position = entry.getKey();
-
-      grid.get(position.get(0))[position.get(1)] = "#";
-    }
-
-    for (String[] row : grid) {
-      System.out.println(String.join("", row));
-    }
-
-    System.out.println("");
-    System.out.print(seen.keySet().size());
+    return seen.keySet().size();
   }
 }
