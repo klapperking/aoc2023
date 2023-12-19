@@ -9,7 +9,7 @@ import java.util.List;
 
 public class Day16Parser {
 
-  public List<Position[]> grid;
+  public List<String[]> grid;
   public Day16Parser(InputStream inputStream) {
 
     this.grid = new ArrayList<>();
@@ -22,15 +22,7 @@ public class Day16Parser {
 
       String line;
       while ((line = br.readLine()) != null) {
-
-        List<Position> lineContents = new ArrayList<>();
-
-        for (String tile : line.split("")) {
-
-          lineContents.add(new Position(tile));
-        }
-
-        this.grid.add(lineContents.toArray(new Position[0]));
+        this.grid.add(line.split(""));
       }
 
     } catch (IOException e) {
